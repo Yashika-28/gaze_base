@@ -1,5 +1,13 @@
 # 🧠 Eye Communicator
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow" />
+  <img src="https://img.shields.io/badge/MediaPipe-Refined%20Iris-00C7B7?style=for-the-badge&logo=google&logoColor=white" alt="MediaPipe" />
+  <img src="https://img.shields.io/badge/OpenCV-4.x-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white" alt="OpenCV" />
+  <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License" />
+</p>
+
 **Eye Communicator** is an intelligent, gaze-based text entry system designed to assist individuals with Amyotrophic Lateral Sclerosis (ALS) and other severe motor impairments. By tracking eye movements using a standard webcam, users can input text on a virtual keyboard and communicate effectively without any physical contact.
 
 The project features deep learning models (1D-CNN and LSTM) trained on large-scale datasets, coupled with a real-time tracking interface powered by MediaPipe and OpenCV, and a responsive Tkinter-based virtual keyboard.
@@ -13,6 +21,19 @@ The project features deep learning models (1D-CNN and LSTM) trained on large-sca
 * **⌨️ Dwell-Time-Based Virtual Keyboard**: An on-screen interactive keyboard (Tkinter) where letters are selected by gazing at them for a configurable dwell period (1.0 second).
 * **🔮 Predictive Text Autocomplete**: Displays context-aware word suggestions based on custom word lists (e.g., hello, help, water, toilet) to minimize typing effort.
 * **📊 Quantitative Experiment Logging**: Automatically logs gaze coordinates, selection history, text logs, and latency metrics to `experiment_log.txt` for clinical and research evaluation.
+
+---
+
+## 🛠️ Technology Stack
+
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Programming Language** | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) | Core application logic and model training |
+| **Deep Learning** | ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat-square&logo=tensorflow&logoColor=white) ![Keras](https://img.shields.io/badge/Keras-D00000?style=flat-square&logo=keras&logoColor=white) | Conv1D and LSTM sequence modeling & regression |
+| **Computer Vision** | ![MediaPipe](https://img.shields.io/badge/MediaPipe-00C7B7?style=flat-square&logo=google&logoColor=white) ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=flat-square&logo=opencv&logoColor=white) | Real-time face mesh and iris tracking via webcam |
+| **Data Processing** | ![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white) ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white) | Numerical matrix computations and CSV data cleanup |
+| **Text Processing** | ![NLTK](https://img.shields.io/badge/NLTK-green?style=flat-square) | Tokenization and stemming for word suggestions |
+| **GUI Framework** | ![Tkinter](https://img.shields.io/badge/Tkinter-gray?style=flat-square) | Lightweight, responsive on-screen virtual keyboard |
 
 ---
 
@@ -165,17 +186,26 @@ python src/keyboard_gui.py
 * **Text Auto-suggestions**: Selecting letters updates suggestions dynamically. Gazing at suggestion buttons at the top instantly fills in the word.
 * **Logging**: Selection updates, input coordinates, and application events are saved in `experiment_log.txt`.
 
----
-
 ## 🧠 Scientific Principles
 
+This project maps physical eye movements to screen coordinates using robust geometric transformations and temporal noise reduction:
+
 1. **Iris Landmark Localization**:
-   MediaPipe refinement identifies eye boundaries (left corners: landmark index 33, 133) and iris center points (left iris: 468, right iris: 473).
+   MediaPipe Face Mesh with refined landmark detection identifies key facial landmarks to track eye movements:
+   * **Left Eye Corners**: Landmarks `33` (outer corner) and `133` (inner corner).
+   * **Iris Center Landmarks**: Landmarks `468` (left iris center) and `473` (right iris center).
+
 2. **Geometric Normalization**:
-   Gaze coordinates are normalized by calculating the ratio between the iris center distance and the overall eye width. This offsets variations caused by head movements or distance from the camera:
-   $$\text{gaze\_x} = \frac{\text{iris\_x} - \text{eye\_inner\_x}}{\text{eye\_width}}$$
+   To offset variations caused by head movements, rotation, or distance from the camera, gaze coordinates are normalized relative to the eye's physical width:
+
+   $$\text{gaze}_x = \frac{\text{iris}_x - \text{eye\_inner}_x}{\text{eye\_width}}$$
+
+   $$\text{gaze}_y = \frac{\text{iris}_y - \text{eye\_inner}_y}{\text{eye\_width}}$$
+
 3. **Temporal Smoothing**:
-   To prevent gaze jitter (rapid fluctuations), a buffer of past predictions is stored. A rolling average (moving window smoothing) is applied before trigger calculations to ensure smooth controls.
+   To prevent gaze jitter (rapid fluctuations and micro-saccades), the system caches a temporal buffer of predicted coordinates. A rolling average (moving window smoothing) is applied before checking dwell triggers:
+
+   $$\text{gaze}_{\text{smoothed}} = \frac{1}{N} \sum_{i=1}^{N} \text{gaze}_{t-i}$$
 
 ---
 
