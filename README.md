@@ -1,4 +1,4 @@
-# 🧠 Eye Communicator
+# 🧠 Gaze Base
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
