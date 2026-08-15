@@ -104,7 +104,7 @@ graph TD
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/chahatgupta/eye_communicator.git
+   git clone https://github.com/yashika-28/gaze_base
    cd eye_communicator
    ```
 
