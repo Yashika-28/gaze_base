@@ -105,7 +105,7 @@ graph TD
 1. **Clone the Repository:**
    ```bash
    git clone https://github.com/yashika-28/gaze_base
-   cd eye_communicator
+   cd gaze_base
    ```
 
 2. **Create a Virtual Environment (Optional but recommended):**
